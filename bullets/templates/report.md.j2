@@ -1,0 +1,36 @@
+{% if render_bullet is undefined %}
+    {% macro render_bullet(details) %}
+    * [{{ details['name'] }}]({{ details['html_url'] }}){% if details['title'] %} {{ details['title'] }}{% endif %}
+    {% endmacro %}
+{% endif %}
+# {{ meta['title'] }}
+
+{{ meta['description'] }}
+
+## Released
+
+We had {{ releases|length }} releases!
+{% for details in releases.values() %}
+{{ render_bullet(details) }}
+{% endfor %}
+
+## In test
+
+We've moved {{ dev_prs|length }} (unreleased) features to test
+{% for details in dev_prs.values() %}
+{{ render_bullet(details) }}
+{% endfor %}
+
+## In flight
+
+We're still working on {{ open_prs|length }} features
+{% for details in open_prs.values() %}
+{{ render_bullet(details) }}
+{% endfor %}
+
+## Issues uncovered
+
+{{ opened_issues|length }} outstanding issues were reported
+{% for details in opened_issues.values() %}
+{{ render_bullet(details) }}
+{% endfor %}

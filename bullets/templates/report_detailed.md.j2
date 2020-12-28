@@ -1,0 +1,6 @@
+{% extends "report.md.j2" %}
+{% macro render_bullet(details) %}
+* [{{ details['name'] }}]({{ details['html_url'] }}){% if details['title'] %} {{ details['title'] }}{% endif %}
+
+{{ details['body']|trim|indent(width=2,first=True, blank=True) }}
+{% endmacro %}

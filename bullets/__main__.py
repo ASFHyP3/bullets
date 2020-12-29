@@ -43,18 +43,19 @@ def generate_bullets(search_start: Optional[datetime] = None, detailed: bool = F
 
         if last_release is None:
             last_release = search_start
-        for pr in gh.pulls.list(repo.owner.login, repo.name,
-                                state='closed', base='develop', sort='updated', direction='desc'):
-            last_updated = parse_date(pr.updated_at)
+        # FIXME: might be able to use issues.list_for_repo with since=... to simplify logic
+        for pull in gh.pulls.list(repo.owner.login, repo.name,
+                                  state='closed', base='develop', sort='updated', direction='desc'):
+            last_updated = parse_date(pull.updated_at)
             # FIXME: This probably should check if merged, and if the merge commit is *in* head.
             #        This assumes that everything merged into develop before the release was included
             #        in the release
-            if last_updated >= last_release and pr.get('merged', False):
-                dev_prs[pr.merge_commit_sha] = util.get_details(pr)
+            if last_updated >= last_release and pull.get('merged', False):
+                dev_prs[pull.merge_commit_sha] = util.get_details(pull)
 
-        for pr in gh.pulls.list(repo.owner.login, repo.name,
-                                state='open', sort='created', direction='desc'):
-            open_prs[pr.head.sha] = util.get_details(pr)
+        for pull in gh.pulls.list(repo.owner.login, repo.name,
+                                  state='open', sort='created', direction='desc'):
+            open_prs[pull.head.sha] = util.get_details(pull)
 
         # FIXME: Returns issues and PRs... simpler to filter this one list or make the three calls?
         for issue in gh.issues.list_for_repo(repo.owner.login, repo.name,

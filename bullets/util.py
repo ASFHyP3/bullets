@@ -1,13 +1,13 @@
-import jinja2
 from dateutil.parser import parse as parse_date
 from fastcore.basics import AttrDict
+from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape
 
 
-def get_environment() -> jinja2.Environment:
-    env = jinja2.Environment(
-        loader=jinja2.PackageLoader('bullets', 'templates'),
-        autoescape=jinja2.select_autoescape(['html.j2']),
-        undefined=jinja2.StrictUndefined,
+def get_environment() -> Environment:
+    env = Environment(
+        loader=PackageLoader('bullets', 'templates'),
+        autoescape=select_autoescape(['html.j2']),
+        undefined=StrictUndefined,
         trim_blocks=True,
         lstrip_blocks=True,
         keep_trailing_newline=True,

@@ -2,9 +2,9 @@ import argparse
 from datetime import datetime
 from typing import Optional
 
+from dateutil import tz
 from dateutil.parser import parse as parse_date
 from dateutil.relativedelta import relativedelta
-from dateutil import tz
 from fastcore.net import HTTP404NotFoundError
 from ghapi.core import GhApi
 from tqdm import tqdm

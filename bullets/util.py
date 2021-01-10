@@ -36,4 +36,3 @@ def get_details(node: AttrDict) -> dict:
         'html_url': node.html_url,
         'created_at': created_at,
     }
-

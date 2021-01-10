@@ -1,7 +1,7 @@
 {% if render_bullet is undefined %}
-    {% macro render_bullet(details) %}
+    {% macro render_bullet(details) -%}
     * [{{ details['name'] }}]({{ details['html_url'] }}){% if details['title'] %} {{ details['title'] }}{% endif %}
-    {% endmacro %}
+    {%- endmacro %}
 {% endif %}
 # {{ meta['title'] }}
 

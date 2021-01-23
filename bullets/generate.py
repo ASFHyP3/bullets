@@ -52,7 +52,8 @@ def generate_bullets(search_start: Optional[datetime] = None, detailed: bool = F
         # FIXME: might be able to use issues.list_for_repo with since=... to simplify logic
         for pull in gh.pulls.list(repo.owner.login, repo.name,
                                   state='closed', base='develop', sort='updated', direction='desc'):
-            if (merged_at := pull.get('merged_at')) and parse_date(merged_at) > max(search_start, last_release):
+            merged_at = pull.get('merged_at')
+            if merged_at and parse_date(merged_at) > max(search_start, last_release):
                 dev_prs[pull.merge_commit_sha] = util.get_details(pull)
 
         for pull in gh.pulls.list(repo.owner.login, repo.name,

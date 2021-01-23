@@ -2,7 +2,7 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
-from bullets.__main__ import generate_bullets
+from bullets.generate import generate_bullets
 try:
     __version__ = version(__name__)
 except PackageNotFoundError:

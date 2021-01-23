@@ -71,4 +71,3 @@ def generate_bullets(search_start: Optional[datetime] = None, detailed: bool = F
     )
     with open(report_name, 'w') as f:
         f.write(report)
-

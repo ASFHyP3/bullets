@@ -1,0 +1,45 @@
+name: Weekly Bullets
+
+on:
+  schedule:
+    # Run @ 5:00 AM ( 2:00 PM UTC) every Monday
+    - cron: '0 14 * * 1'
+
+env:
+  SENDER_EMAIL: UAF-asf-apd@alaska.edu
+  RECIPIENT_EMAIL: jhkennedy@alaska.edu
+  AWS_REGION: us-west-2
+  AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
+
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.7
+          activate-environment: bullets
+          environment-file: conda-env.yml
+
+      - name: Generate report
+        shell: bash -l {0}
+        run: |
+          python -m bullets
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: report
+          path: 'report.md'
+
+      - name: Send report email
+        shell: bash -l {0}
+        run: |
+          export EMAIL_SUBJECT=$(sed -n 3p report.md)
+          maildown init access_key=${AWS_ACCESS_KEY_ID} secret_key=${AWS_SECRET_ACCESS_KEY} region_name=${AWS_REGION}
+          maildown send ${SENDER_EMAIL} ${EMAIL_SUBJECT} -f report.md ${RECIPIENT_EMAIL}

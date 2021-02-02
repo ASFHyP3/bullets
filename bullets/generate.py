@@ -11,7 +11,7 @@ from tqdm import tqdm
 from bullets import util
 
 _DAYS_BACK = 7
-_RD_ARGS = {'hour': 14, 'minute': 0, 'second': 0, 'microsecond': 0}
+_RD_ARGS = {'hour': 5, 'minute': 0, 'second': 0, 'microsecond': 0}
 
 
 def generate_bullets(search_start: Optional[datetime] = None, detailed: bool = False):

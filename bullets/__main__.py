@@ -29,8 +29,7 @@ def main():
 
     if args.start_search is None:
         args.start_search = datetime.now(tz.gettz('AKST')) - relativedelta(days=args.days_back, **_RD_ARGS)
-
-    if args.start_search.tzinfo is None:
+    elif args.start_search.tzinfo is None:
         args.start_search = args.start_search.replace(tzinfo=tz.gettz('AKST'))
 
     generate_bullets(search_start=args.start_search, detailed=args.detailed)

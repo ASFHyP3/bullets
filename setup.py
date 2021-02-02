@@ -23,14 +23,16 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
 
-    python_requires='~=3.8',
+    python_requires='~=3.7',
 
     install_requires=[
         'fastcore',
         'ghapi',
+        'importlib_metadata',
         'jinja2',
         'python-dateutil',
         'tqdm',

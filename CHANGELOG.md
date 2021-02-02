@@ -8,3 +8,5 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased](https://github.com/ASFHyP3/bullets/compare/v0.0.0...develop) -- likely 0.0.1
 
+### Added
+* `bullets` package to generate bullet reports; see [README](README.md)

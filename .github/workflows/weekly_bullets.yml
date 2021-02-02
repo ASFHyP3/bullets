@@ -4,10 +4,22 @@ on:
   schedule:
     # Run @ 5:00 AM ( 2:00 PM UTC) every Monday
     - cron: '0 14 * * 1'
+  workflow_dispatch:
+    inputs:
+      start_time:
+        description: "Start time of the bullet report"
+        required: false
+      sender:
+        description: "The sender's email address"
+        required: false
+      recipients:
+        description: "A SPACE separated list of email address that should receive the bullet report"
+        required: true
 
 env:
-  SENDER_EMAIL: UAF-asf-apd@alaska.edu
-  RECIPIENT_EMAIL: jhkennedy@alaska.edu
+  START_TIME: ${{ github.event.inputs.start_time }}
+  SENDER_EMAIL: ${{ github.event.inputs.sender }}
+  RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
   AWS_REGION: us-west-2
   AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
@@ -29,7 +41,11 @@ jobs:
       - name: Generate report
         shell: bash -l {0}
         run: |
-          python -m bullets
+          if [[ -z "${START_TIME}" ]]; then
+            python -m bullets
+          else
+            python -m bullets --start-search "${START_TIME}"
+          fi
 
       - name: Upload report artifact
         uses: actions/upload-artifact@v2
@@ -40,6 +56,8 @@ jobs:
       - name: Send report email
         shell: bash -l {0}
         run: |
+          export SENDER_EMAIL="${SENDER_EMAIL:-UAF-asf-apd@alaska.edu}"
           export EMAIL_SUBJECT=$(sed -n 3p report.md)
+          export RECIPIENT_EMAILS="${RECIPIENT_EMAILS:-jhkennedy@alaska.edu}"
           maildown init access_key=${AWS_ACCESS_KEY_ID} secret_key=${AWS_SECRET_ACCESS_KEY} region_name=${AWS_REGION}
-          maildown send ${SENDER_EMAIL} ${EMAIL_SUBJECT} -f report.md ${RECIPIENT_EMAIL}
+          maildown send ${SENDER_EMAIL} "${EMAIL_SUBJECT}" -f report.md ${RECIPIENT_EMAILS}

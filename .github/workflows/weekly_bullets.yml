@@ -41,10 +41,11 @@ jobs:
       - name: Generate report
         shell: bash -l {0}
         run: |
+          python -m pip install .
           if [[ -z "${START_TIME}" ]]; then
             python -m bullets
           else
-            python -m bullets --start-search "${START_TIME}"
+            python -m bullets --search-start "${START_TIME}"
           fi
 
       - name: Upload report artifact

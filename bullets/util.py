@@ -1,3 +1,5 @@
+from datetime import datetime
+from dateutil import tz
 from dateutil.parser import parse as parse_date
 from fastcore.basics import AttrDict
 from jinja2 import Environment, PackageLoader, StrictUndefined, select_autoescape
@@ -36,3 +38,9 @@ def get_details(node: AttrDict) -> dict:
         'html_url': node.html_url,
         'created_at': created_at,
     }
+
+
+def ensure_tzinfo(date_time: datetime, default_tz: str = 'AKST') -> datetime:
+    if date_time.tzinfo is None:
+        date_time = date_time.replace(tzinfo=tz.gettz(default_tz))
+    return date_time

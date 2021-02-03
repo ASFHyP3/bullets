@@ -40,6 +40,10 @@ def generate_bullets(search_start: datetime, detailed: bool = False):
             last_release = parse_date(gh.repos.get_latest_release(repo.owner.login, repo.name).created_at)
             for release in gh.repos.list_releases(repo.owner.login, repo.name):
                 created_at = parse_date(release.created_at)
+                print('-'*80)
+                print(created_at)
+                print(search_start)
+                print('-'*80)
                 if created_at >= search_start:
                     release_details[release.target_commitish] = util.get_details(release)
                 else:

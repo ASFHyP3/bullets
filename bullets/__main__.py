@@ -1,6 +1,6 @@
-import sys
-import logging
 import argparse
+import logging
+import sys
 from datetime import datetime
 
 from dateutil import tz

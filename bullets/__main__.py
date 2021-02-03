@@ -28,8 +28,8 @@ def main():
 
     args = parser.parse_args()
 
-    if args.start_search is None:
-        args.start_search = datetime.now(tz.gettz('AKST')) \
+    if args.search_start is None:
+        args.search_start = datetime.now(tz.gettz('AKST')) \
                             - relativedelta(days=args.days_back, hour=5, minute=0, second=0, microsecond=0)
 
     out = logging.StreamHandler(stream=sys.stdout)

@@ -14,7 +14,12 @@ log = logging.getLogger(__name__)
 
 def generate_bullets(search_start: datetime, detailed: bool = False):
     aknow = datetime.now(tz.gettz('AKST'))
+    print('-' * 80)
+    print(search_start)
+    print(search_start.tzinfo)
+    print('-' * 80)
     search_start = util.ensure_tzinfo(search_start)
+
 
     meta = {
         'title': 'Tools Team bullets',
@@ -43,6 +48,7 @@ def generate_bullets(search_start: datetime, detailed: bool = False):
                 print('-'*80)
                 print(created_at)
                 print(search_start)
+                print(search_start.tzinfo)
                 print('-'*80)
                 if created_at >= search_start:
                     release_details[release.target_commitish] = util.get_details(release)

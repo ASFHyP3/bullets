@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from dateutil import tz
 from dateutil.parser import parse as parse_date
@@ -13,13 +13,9 @@ log = logging.getLogger(__name__)
 
 
 def generate_bullets(search_start: datetime, detailed: bool = False):
-    aknow = datetime.now(tz.gettz('AKST'))
-    print('-' * 80)
-    print(search_start)
-    print(search_start.tzinfo)
-    print('-' * 80)
-    search_start = util.ensure_tzinfo(search_start)
-
+    akst = tz.tzoffset('AKST', timedelta(hours=-9))
+    aknow = datetime.now(akst)
+    search_start = search_start.astimezone(akst)
 
     meta = {
         'title': 'Tools Team bullets',
@@ -45,11 +41,6 @@ def generate_bullets(search_start: datetime, detailed: bool = False):
             last_release = parse_date(gh.repos.get_latest_release(repo.owner.login, repo.name).created_at)
             for release in gh.repos.list_releases(repo.owner.login, repo.name):
                 created_at = parse_date(release.created_at)
-                print('-'*80)
-                print(created_at)
-                print(search_start)
-                print(search_start.tzinfo)
-                print('-'*80)
                 if created_at >= search_start:
                     release_details[release.target_commitish] = util.get_details(release)
                 else:

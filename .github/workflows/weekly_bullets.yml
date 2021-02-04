@@ -38,12 +38,16 @@ jobs:
           activate-environment: bullets
           environment-file: conda-env.yml
 
+      - name: Install bullets
+        shell: bash -l {0}
+        run: |
+          python -m pip install .
+
       - name: Generate report
         env:
           GITHUB_TOKEN: ${{ secrets.TOOLS_BOT_PAK }}
         shell: bash -l {0}
         run: |
-          python -m pip install .
           if [[ -z "${START_TIME}" ]]; then
             python -m bullets
           else

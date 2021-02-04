@@ -39,6 +39,8 @@ jobs:
           environment-file: conda-env.yml
 
       - name: Generate report
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOOLS_BOT_PAK }}
         shell: bash -l {0}
         run: |
           python -m pip install .

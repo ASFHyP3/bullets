@@ -60,14 +60,14 @@ jobs:
           path: 'report.md'
 
       - name: Send scheduled email
-        if: ${{ github.event_name }} == 'schedule'
+        if: github.event_name == 'schedule'
         shell: bash -l {0}
         run: |
           export EMAIL_SUBJECT=$(sed -n 3p report.md)
           sendit report.md UAF-asf-apd@alaska.edu "${EMAIL_SUBJECT}" kahogenson@alaska.edu
 
       - name: Send dispatched email
-        if: ${{ github.event_name }} == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch'
         env:
           SENDER_EMAIL: ${{ github.event.inputs.sender }}
           RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}

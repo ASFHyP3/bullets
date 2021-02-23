@@ -20,7 +20,7 @@ env:
   START_TIME: ${{ github.event.inputs.start_time }}
   SENDER_EMAIL: ${{ github.event.inputs.sender }}
   RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
-  AWS_REGION: us-west-2
+  AWS_DEFAULT_REGION: us-west-2
   AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
 

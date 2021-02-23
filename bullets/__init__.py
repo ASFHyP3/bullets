@@ -1,6 +1,6 @@
 """Generates a weekly bullet-point list of all the work done by ASF's Tools Team"""
 
-from importlib_metadata import PackageNotFoundError, version
+from importlib.metadata import PackageNotFoundError, version
 
 from bullets.generate import generate_bullets
 try:

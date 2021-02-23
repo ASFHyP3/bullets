@@ -23,17 +23,18 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
 
-    python_requires='~=3.7',
+    python_requires='~=3.8',
 
     install_requires=[
+        'boto3',
         'fastcore',
         'ghapi',
-        'importlib_metadata',
         'jinja2',
+        'mistune',
+        'premailer',
         'python-dateutil',
         'tqdm',
     ],
@@ -54,6 +55,7 @@ setup(
 
     entry_points={'console_scripts': [
             'bullets = bullets.__main__:main',
+            'sendit = bullets.email:main',
         ]
     },
 

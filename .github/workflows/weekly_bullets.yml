@@ -20,7 +20,7 @@ env:
   START_TIME: ${{ github.event.inputs.start_time }}
   SENDER_EMAIL: ${{ github.event.inputs.sender }}
   RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
-  AWS_REGION: us-west-2
+  AWS_DEFAULT_REGION: us-west-2
   AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
 
@@ -34,7 +34,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
-          python-version: 3.7
+          python-version: 3.8
           activate-environment: bullets
           environment-file: conda-env.yml
 
@@ -49,9 +49,9 @@ jobs:
         shell: bash -l {0}
         run: |
           if [[ -z "${START_TIME}" ]]; then
-            python -m bullets
+            bullets
           else
-            python -m bullets --search-start "${START_TIME}"
+            bullets --search-start "${START_TIME}"
           fi
 
       - name: Upload report artifact
@@ -66,5 +66,4 @@ jobs:
           export SENDER_EMAIL="${SENDER_EMAIL:-UAF-asf-apd@alaska.edu}"
           export EMAIL_SUBJECT=$(sed -n 3p report.md)
           export RECIPIENT_EMAILS="${RECIPIENT_EMAILS:-jhkennedy@alaska.edu}"
-          maildown init access_key=${AWS_ACCESS_KEY_ID} secret_key=${AWS_SECRET_ACCESS_KEY} region_name=${AWS_REGION}
-          maildown send ${SENDER_EMAIL} "${EMAIL_SUBJECT}" -f report.md ${RECIPIENT_EMAILS}
+          sendit report.md ${SENDER_EMAIL} "${EMAIL_SUBJECT}" ${RECIPIENT_EMAILS}

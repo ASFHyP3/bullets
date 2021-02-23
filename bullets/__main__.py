@@ -1,7 +1,7 @@
 import argparse
 import logging
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from dateutil import tz
 from dateutil.parser import parse as parse_date
@@ -29,8 +29,9 @@ def main():
     args = parser.parse_args()
 
     if args.search_start is None:
-        args.search_start = datetime.now(tz.gettz('AKST')) \
-                            - relativedelta(days=args.days_back, hour=5, minute=0, second=0, microsecond=0)
+        akst = tz.tzoffset('AKST', timedelta(hours=-9))
+        args.search_start = \
+            datetime.now(akst) - relativedelta(days=args.days_back, hour=5, minute=0, second=0, microsecond=0)
 
     out = logging.StreamHandler(stream=sys.stdout)
     out.addFilter(lambda record: record.levelno <= logging.INFO)

@@ -49,9 +49,9 @@ jobs:
         shell: bash -l {0}
         run: |
           if [[ -z "${START_TIME}" ]]; then
-            python -m bullets
+            bullets
           else
-            python -m bullets --search-start "${START_TIME}"
+            bullets --search-start "${START_TIME}"
           fi
 
       - name: Upload report artifact
@@ -60,11 +60,10 @@ jobs:
           name: report
           path: 'report.md'
 
-#      - name: Send report email
-#        shell: bash -l {0}
-#        run: |
-#          export SENDER_EMAIL="${SENDER_EMAIL:-UAF-asf-apd@alaska.edu}"
-#          export EMAIL_SUBJECT=$(sed -n 3p report.md)
-#          export RECIPIENT_EMAILS="${RECIPIENT_EMAILS:-jhkennedy@alaska.edu}"
-#          maildown init access_key=${AWS_ACCESS_KEY_ID} secret_key=${AWS_SECRET_ACCESS_KEY} region_name=${AWS_REGION}
-#          maildown send ${SENDER_EMAIL} "${EMAIL_SUBJECT}" -f report.md ${RECIPIENT_EMAILS}
+      - name: Send report email
+        shell: bash -l {0}
+        run: |
+          export SENDER_EMAIL="${SENDER_EMAIL:-UAF-asf-apd@alaska.edu}"
+          export EMAIL_SUBJECT=$(sed -n 3p report.md)
+          export RECIPIENT_EMAILS="${RECIPIENT_EMAILS:-jhkennedy@alaska.edu}"
+          sendit ${SENDER_EMAIL} report.md '${EMAIL_SUBJECT}' ${RECIPIENT_EMAILS}

@@ -29,9 +29,12 @@ setup(
     python_requires='~=3.8',
 
     install_requires=[
+        'boto3',
         'fastcore',
         'ghapi',
         'jinja2',
+        'mistune',
+        'premailer',
         'python-dateutil',
         'tqdm',
     ],
@@ -52,6 +55,7 @@ setup(
 
     entry_points={'console_scripts': [
             'bullets = bullets.__main__:main',
+            'sendit = bullets.email:main',
         ]
     },
 

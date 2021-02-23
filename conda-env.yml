@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python=3.7
+  - python=3.8
   - pip
   # For packaging, and testing
   - flake8
@@ -17,8 +17,11 @@ dependencies:
   - pytest-console-scripts
   - pytest-cov
   # For running
+  - boto3
   - jinja2
   - jupyter
+  - mistune
+  - premailer
   - python-dateutil
   - tqdm
   - pip:
@@ -26,3 +29,4 @@ dependencies:
     - s3pypi
     # For running
     - ghapi
+    - premailery

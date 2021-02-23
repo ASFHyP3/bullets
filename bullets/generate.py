@@ -1,29 +1,28 @@
-from datetime import datetime
-from typing import Optional
+import logging
+from datetime import datetime, timedelta
 
 from dateutil import tz
 from dateutil.parser import parse as parse_date
-from dateutil.relativedelta import relativedelta
 from fastcore.net import HTTP404NotFoundError
 from ghapi.core import GhApi
 from tqdm import tqdm
 
 from bullets import util
 
-_DAYS_BACK = 7
-_RD_ARGS = {'hour': 5, 'minute': 0, 'second': 0, 'microsecond': 0}
+log = logging.getLogger(__name__)
 
 
-def generate_bullets(search_start: Optional[datetime] = None, detailed: bool = False):
-    aknow = datetime.now(tz.gettz('AKST'))
-    if search_start is None:
-        search_start = aknow - relativedelta(days=_DAYS_BACK, **_RD_ARGS)
+def generate_bullets(search_start: datetime, detailed: bool = False):
+    akst = tz.tzoffset('AKST', timedelta(hours=-9))
+    aknow = datetime.now(akst)
+    search_start = search_start.astimezone(akst)
 
     meta = {
         'title': 'Tools Team bullets',
         'description': f"Tools team bullets for {search_start.isoformat(timespec='seconds')}"
                        f" through {aknow.isoformat(timespec='seconds')}",
     }
+    log.info(f'Generating {meta["description"]}')
 
     gh = GhApi()
     release_details = {}

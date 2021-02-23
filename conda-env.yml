@@ -21,7 +21,6 @@ dependencies:
   - jinja2
   - jupyter
   - mistune
-  - premailer
   - python-dateutil
   - tqdm
   - pip:
@@ -29,4 +28,4 @@ dependencies:
     - s3pypi
     # For running
     - ghapi
-    - premailery
+    - premailer

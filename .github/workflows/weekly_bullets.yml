@@ -34,7 +34,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
-          python-version: 3.7
+          python-version: 3.8
           activate-environment: bullets
           environment-file: conda-env.yml
 
@@ -60,11 +60,11 @@ jobs:
           name: report
           path: 'report.md'
 
-      - name: Send report email
-        shell: bash -l {0}
-        run: |
-          export SENDER_EMAIL="${SENDER_EMAIL:-UAF-asf-apd@alaska.edu}"
-          export EMAIL_SUBJECT=$(sed -n 3p report.md)
-          export RECIPIENT_EMAILS="${RECIPIENT_EMAILS:-jhkennedy@alaska.edu}"
-          maildown init access_key=${AWS_ACCESS_KEY_ID} secret_key=${AWS_SECRET_ACCESS_KEY} region_name=${AWS_REGION}
-          maildown send ${SENDER_EMAIL} "${EMAIL_SUBJECT}" -f report.md ${RECIPIENT_EMAILS}
+#      - name: Send report email
+#        shell: bash -l {0}
+#        run: |
+#          export SENDER_EMAIL="${SENDER_EMAIL:-UAF-asf-apd@alaska.edu}"
+#          export EMAIL_SUBJECT=$(sed -n 3p report.md)
+#          export RECIPIENT_EMAILS="${RECIPIENT_EMAILS:-jhkennedy@alaska.edu}"
+#          maildown init access_key=${AWS_ACCESS_KEY_ID} secret_key=${AWS_SECRET_ACCESS_KEY} region_name=${AWS_REGION}
+#          maildown send ${SENDER_EMAIL} "${EMAIL_SUBJECT}" -f report.md ${RECIPIENT_EMAILS}

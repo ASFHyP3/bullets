@@ -13,7 +13,7 @@ on:
 env:
   S3_PYPI_HOST: hyp3-pypi-west.s3-website-us-west-2.amazonaws.com
   S3_PYPI_BUCKET: hyp3-pypi-west
-  AWS_REGION: us-west-2
+  AWS_DEFAULT_REGION: us-west-2
   AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
 
@@ -33,7 +33,7 @@ jobs:
       - name: Pytest in conda environment
         shell: bash -l {0}
         run: |
-          python -m pip install .[develop]
+          python -m pip install ".[develop]"
           pytest --cov=bullets
 
 
@@ -112,7 +112,7 @@ jobs:
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       - name: Build distribuion and upload to S3-PyPI
         id: build

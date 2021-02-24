@@ -137,8 +137,8 @@ sendit report.md sender@alaska.edu "${EMAIL_SUBJECT}" recepient@alaska.edu
 
 To use `sendit`, you will need:
 1. [AWS credentials set up for Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration)
-2. The AWS user/role needs to
+1. The AWS user/role needs to
    1. have a default region specified
    1. allow `ses:SendEmail`
-3. Unless you've taken [Amazon SES out of the sandbox](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html),
+1. Unless you've taken [Amazon SES out of the sandbox](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html),
    all "to" **and** "from" emails need to be verified

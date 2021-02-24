@@ -12,14 +12,12 @@ on:
       sender:
         description: "The sender's email address"
         required: false
+        default: UAF-asf-apd@alaska.edu
       recipients:
         description: "A SPACE separated list of email address that should receive the bullet report"
         required: true
 
 env:
-  START_TIME: ${{ github.event.inputs.start_time }}
-  SENDER_EMAIL: ${{ github.event.inputs.sender }}
-  RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
   AWS_DEFAULT_REGION: us-west-2
   AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
@@ -46,6 +44,7 @@ jobs:
       - name: Generate report
         env:
           GITHUB_TOKEN: ${{ secrets.TOOLS_BOT_PAK }}
+          START_TIME: ${{ github.event.inputs.start_time }}
         shell: bash -l {0}
         run: |
           if [[ -z "${START_TIME}" ]]; then
@@ -60,10 +59,19 @@ jobs:
           name: report
           path: 'report.md'
 
-      - name: Send report email
+      - name: Send scheduled email
+        if: github.event_name == 'schedule'
         shell: bash -l {0}
         run: |
-          export SENDER_EMAIL="${SENDER_EMAIL:-UAF-asf-apd@alaska.edu}"
           export EMAIL_SUBJECT=$(sed -n 3p report.md)
-          export RECIPIENT_EMAILS="${RECIPIENT_EMAILS:-jhkennedy@alaska.edu}"
+          sendit report.md UAF-asf-apd@alaska.edu "${EMAIL_SUBJECT}" kahogenson@alaska.edu
+
+      - name: Send dispatched email
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          SENDER_EMAIL: ${{ github.event.inputs.sender }}
+          RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
+        shell: bash -l {0}
+        run: |
+          export EMAIL_SUBJECT=$(sed -n 3p report.md)
           sendit report.md ${SENDER_EMAIL} "${EMAIL_SUBJECT}" ${RECIPIENT_EMAILS}

@@ -6,23 +6,37 @@ Generates a weekly bullet-point list of all the work done by ASF's Tools Team
 
 
 ```shell
-$ python -m bullets --help
+$ bullets --help
 usage: bullets [-h] [-d DAYS_BACK | -s START_SEARCH] [--detailed]
 
 optional arguments:
   -h, --help            show this help message and exit
   -d DAYS_BACK, --days-back DAYS_BACK
                         Start search at 2:00 PM this many days ago (default: 7)
-  -s START_SEARCH, --start-search START_SEARCH
+  -s SEARCH_START, --search-start SEARCH_START
                         Start search at this time (must be parsable by dateutil) (default: None)
   --detailed            Produce a detailed report that includes the Release/PR/Issue body.
                         EXPERIMENTAL! Report formatting is likely not great. (default: False)
 ```
 
+```shell
+$ sendit --help
+usage: sendit [-h] markdown_file sender subject to [to ...]
+
+positional arguments:
+  markdown_file  Markdown file with the email content
+  sender         Send email from this address
+  subject        Subject of the email
+  to             Send email to these addresses
+
+optional arguments:
+  -h, --help     show this help message and exit
+```
+
 ## Install
 
 Tools Team Bullets is not currently distributed and as such expects users to be
-developers on the Tools Team.
+developers on ASF's Tools Team.
 
 To install a development version:
 1. clone the repo
@@ -38,9 +52,14 @@ To install a development version:
    ```shell
     python -m pip install -e ".[develop]"
    ```
+4. verify your install
+   ```shell
+   pytest
+   ```
 
 ## Usage
 
+### Bullets Report
 By default, running bullets with no options
 
 ```shell
@@ -48,13 +67,13 @@ $ bullets
 100%|████████████████████████████████████████████████████████████████████| 17/17
 ```
 
-will produce a file called `report.md` containing bullet report starting days
-previously at 2:00 PM 7. The report looks like:
+will produce a file called `report.md` containing bullet report starting 7 days
+previously at 5:00 AM. The report looks like:
 
-```md
+```markdown
 # Tools Team bullets
 
-Tools team bullets for 2021-01-15T14:00:00-09:00 through 2021-01-22T14:50:26-09:00
+Tools team bullets for 2021-01-15T05:00:00-09:00 through 2021-01-22T14:50:26-09:00
 
 ## Released
 
@@ -90,7 +109,7 @@ by [dateutil](https://dateutil.readthedocs.io/en/stable/parser.html#dateutil.par
 There is also an **experimental** option to add each issues/pr/release body to
 the report, which will modify the above bullets like:
 
-```md
+```markdown
 * [HyP3-v0.8.10](https://github.com/ASFHyP3/hyp3/releases/tag/v0.8.10)
   ### Added
   - AutoRIFT jobs now allow submission with Landsat 8 Collection 2 granules
@@ -104,3 +123,22 @@ the report, which will modify the above bullets like:
 ```
 
 but rendering will likely be #NotGreat.
+
+### Send report email
+
+Bullets also includes a utility to send the bullets report by email using the 
+[Amazon Simple Email Service (SES)](https://aws.amazon.com/ses/). You can send a
+previously generated report like:
+
+```shell
+export EMAIL_SUBJECT=$(sed -n 3p report.md)
+sendit report.md sender@alaska.edu "${EMAIL_SUBJECT}" recepient@alaska.edu
+```
+
+To use `sendit`, you will need:
+1. [AWS credentials set up for Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration)
+2. The AWS user/role needs to
+   1. have a default region specified
+   1. allow `ses:SendEmail`
+3. Unless you've taken [Amazon SES out of the sandbox](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html),
+   all "to" **and** "from" emails need to be verified

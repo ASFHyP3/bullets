@@ -74,10 +74,10 @@ to connect to your github account.
 
 **For `bullets`, the PAT needs *no* scopes selected** since it's just reading information
 about repositories you have access to. For best security, we recommend creating a
-least-privileged PAT just for bullets.
+least-privileged PAT just for `bullets`.
 
 Once you have your PAT, you need to set a `GITHUB_TOKEN` environment variable with
-the PAT as it's value:
+the PAT as its value:
 ```
 export GITHUB_TOKEN=XXX
 ```

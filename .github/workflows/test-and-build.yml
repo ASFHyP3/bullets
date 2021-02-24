@@ -10,12 +10,6 @@ on:
       - main
       - develop
 
-env:
-  S3_PYPI_HOST: hyp3-pypi-west.s3-website-us-west-2.amazonaws.com
-  S3_PYPI_BUCKET: hyp3-pypi-west
-  AWS_DEFAULT_REGION: us-west-2
-  AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   pytest:
@@ -107,41 +101,3 @@ jobs:
 
           git push --tags
           echo "Tagged version $(git describe --abbrev=0) and pushed back to repo"
-
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
-
-      - name: Build distribuion and upload to S3-PyPI
-        id: build
-        run: |
-          git fetch origin +refs/tags/*:refs/tags/*
-          export SDIST_VERSION=$(python setup.py --version)
-          echo "::set-output name=version::${SDIST_VERSION}"
-          python setup.py sdist bdist_wheel
-          echo "Uploading version ${SDIST_VERSION} to ${S3_PYPI_BUCKET}"
-          s3pypi --bucket ${S3_PYPI_BUCKET} --private --force --verbose
-
-
-  verify-packaging:
-    runs-on: ubuntu-latest
-    needs: package
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: 3.8
-          activate-environment: bullets
-          environment-file: conda-env.yml
-
-      - name: Pip install ${{ needs.package.outputs.SDIST_VERSION }}
-        shell: bash -l {0}
-        run: |
-          export SDIST_VERSION=${{ needs.package.outputs.SDIST_VERSION }}
-          python -m pip install bullets==${SDIST_VERSION} \
-              --trusted-host "${S3_PYPI_HOST}" \
-              --extra-index-url "http://${S3_PYPI_HOST}"

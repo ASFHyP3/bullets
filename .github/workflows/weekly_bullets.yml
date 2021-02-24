@@ -1,0 +1,77 @@
+name: Weekly Bullets
+
+on:
+  schedule:
+    # Run @ 5:00 AM ( 2:00 PM UTC) every Monday
+    - cron: '0 14 * * 1'
+  workflow_dispatch:
+    inputs:
+      start_time:
+        description: "Start time of the bullet report"
+        required: false
+      sender:
+        description: "The sender's email address"
+        required: false
+        default: UAF-asf-apd@alaska.edu
+      recipients:
+        description: "A SPACE separated list of email address that should receive the bullet report"
+        required: true
+
+env:
+  AWS_DEFAULT_REGION: us-west-2
+  AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
+
+
+jobs:
+  bullets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.8
+          activate-environment: bullets
+          environment-file: conda-env.yml
+
+      - name: Install bullets
+        shell: bash -l {0}
+        run: |
+          python -m pip install .
+
+      - name: Generate report
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOOLS_BOT_PAK }}
+          START_TIME: ${{ github.event.inputs.start_time }}
+        shell: bash -l {0}
+        run: |
+          if [[ -z "${START_TIME}" ]]; then
+            bullets
+          else
+            bullets --search-start "${START_TIME}"
+          fi
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: report
+          path: 'report.md'
+
+      - name: Send scheduled email
+        if: github.event_name == 'schedule'
+        shell: bash -l {0}
+        run: |
+          export EMAIL_SUBJECT=$(sed -n 3p report.md)
+          sendit report.md UAF-asf-apd@alaska.edu "${EMAIL_SUBJECT}" kahogenson@alaska.edu
+
+      - name: Send dispatched email
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          SENDER_EMAIL: ${{ github.event.inputs.sender }}
+          RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
+        shell: bash -l {0}
+        run: |
+          export EMAIL_SUBJECT=$(sed -n 3p report.md)
+          sendit report.md ${SENDER_EMAIL} "${EMAIL_SUBJECT}" ${RECIPIENT_EMAILS}

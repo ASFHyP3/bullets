@@ -59,7 +59,41 @@ To install a development version:
 
 ## Usage
 
+### Initial setup
+
+Bullets includes a `bullets` report generator and a `sendit` report emailer, both
+of which require some setup to authenticate to [GitHub](https://github.com/) and 
+[Amazon Simple Email Service (SES)](https://aws.amazon.com/ses/), respectively.
+
+#### Bullets report
+
+`bullets` uses [`ghapi`](https://ghapi.fast.ai/) to interface to GitHub's API.
+`ghapi` [requires](https://ghapi.fast.ai/#How-to-use---Python) a 
+[GitHub Personal Access Token (PAT)](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token)
+to connect to your github account. 
+
+**For `bullets`, the PAT needs *no* scopes selected** since it's just reading information
+about repositories you have access to. For best security, we recommend creating a
+least-privileged PAT just for bullets.
+
+Once you have your PAT, you need to set a `GITHUB_TOKEN` environment variable with
+the PAT as it's value:
+```
+export GITHUB_TOKEN=XXX
+```
+
+#### Send emails
+
+To use `sendit`, you will need:
+1. [AWS credentials set up for Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration)
+1. The AWS user/role needs to
+   1. have a default region specified
+   1. allow `ses:SendEmail`
+1. Unless you've taken [Amazon SES out of the sandbox](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html),
+   all "to" **and** "from" emails need to be verified
+
 ### Bullets Report
+
 By default, running bullets with no options
 
 ```shell
@@ -134,11 +168,3 @@ previously generated report like:
 export EMAIL_SUBJECT=$(sed -n 3p report.md)
 sendit report.md sender@alaska.edu "${EMAIL_SUBJECT}" recepient@alaska.edu
 ```
-
-To use `sendit`, you will need:
-1. [AWS credentials set up for Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html#configuration)
-1. The AWS user/role needs to
-   1. have a default region specified
-   1. allow `ses:SendEmail`
-1. Unless you've taken [Amazon SES out of the sandbox](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html),
-   all "to" **and** "from" emails need to be verified

@@ -10,7 +10,7 @@ from mattermostdriver import Driver
 def post(markdown_file: Path, channel: str = 'APD'):
     mattermost = Driver({
         'url': 'chat.asf.alaska.edu',
-        'token': os.environ.get('MATTERMOST_PAK'),
+        'token': os.environ.get('MATTERMOST_PAT'),
         'scheme': 'https',
         'port': 443
     })

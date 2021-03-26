@@ -15,7 +15,10 @@ on:
         default: UAF-asf-apd@alaska.edu
       recipients:
         description: "A SPACE separated list of email address that should receive the bullet report"
-        required: true
+        required: false
+      mattermost_channel:
+        description: "Post report to this ASF MatterMost channel"
+        required: false
 
 env:
   AWS_DEFAULT_REGION: us-west-2
@@ -59,19 +62,26 @@ jobs:
           name: report
           path: 'report.md'
 
-      - name: Send scheduled email
+      - name: Send scheduled messages
         if: github.event_name == 'schedule'
         shell: bash -l {0}
         run: |
           export EMAIL_SUBJECT=$(sed -n 3p report.md)
           sendit report.md UAF-asf-apd@alaska.edu "${EMAIL_SUBJECT}" kahogenson@alaska.edu
+          postit report.md
 
-      - name: Send dispatched email
+      - name: Send dispatched messages
         if: github.event_name == 'workflow_dispatch'
         env:
           SENDER_EMAIL: ${{ github.event.inputs.sender }}
           RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
+          MATTERMOST_CHANNEL: ${{ github.event.inputs.mattermost_channel }}
         shell: bash -l {0}
         run: |
-          export EMAIL_SUBJECT=$(sed -n 3p report.md)
-          sendit report.md ${SENDER_EMAIL} "${EMAIL_SUBJECT}" ${RECIPIENT_EMAILS}
+          if [[ -z "${RECIPIENT_EMAILS}" ]]; then
+            export EMAIL_SUBJECT=$(sed -n 3p report.md)
+            sendit report.md ${SENDER_EMAIL} "${EMAIL_SUBJECT}" ${RECIPIENT_EMAILS}
+          fi
+          if [[ -z "${MATTERMOST_CHANNEL}" ]]; then
+            postit report.md --channel ${MATTERMOST_CHANNEL}
+          fi

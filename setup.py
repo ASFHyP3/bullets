@@ -33,6 +33,7 @@ setup(
         'fastcore',
         'ghapi',
         'jinja2',
+        'mattermostdriver',
         'mistune',
         'premailer',
         'python-dateutil',
@@ -56,6 +57,7 @@ setup(
     entry_points={'console_scripts': [
             'bullets = bullets.__main__:main',
             'sendit = bullets.email:main',
+            'postit = bullets.mattermost:main',
         ]
     },
 

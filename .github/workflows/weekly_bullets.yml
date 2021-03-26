@@ -76,7 +76,7 @@ jobs:
           SENDER_EMAIL: ${{ github.event.inputs.sender }}
           RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
           MATTERMOST_CHANNEL: ${{ github.event.inputs.mattermost_channel }}
-          MATTERMOST_PAT: ${{ secrets.TOOLS_BOT_PAT }}
+          MATTERMOST_PAT: ${{ secrets.MATTERMOST_PAT }}
         shell: bash -l {0}
         run: |
           if [[ -z "${RECIPIENT_EMAILS}" ]]; then

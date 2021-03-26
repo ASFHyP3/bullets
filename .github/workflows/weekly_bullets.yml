@@ -24,7 +24,7 @@ env:
   AWS_DEFAULT_REGION: us-west-2
   AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
-
+  MATTERMOST_PAT: ${{ secrets.MATTERMOST_PAT }}
 
 jobs:
   bullets:
@@ -76,7 +76,6 @@ jobs:
           SENDER_EMAIL: ${{ github.event.inputs.sender }}
           RECIPIENT_EMAILS: ${{ github.event.inputs.recipients }}
           MATTERMOST_CHANNEL: ${{ github.event.inputs.mattermost_channel }}
-          MATTERMOST_PAT: ${{ secrets.MATTERMOST_PAT }}
         shell: bash -l {0}
         run: |
           if [[ -z "${RECIPIENT_EMAILS}" ]]; then

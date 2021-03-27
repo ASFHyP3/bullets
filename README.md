@@ -33,6 +33,18 @@ optional arguments:
   -h, --help     show this help message and exit
 ```
 
+```shell
+$ postit --help
+usage: postit [-h] [--channel CHANNEL] markdown_file
+
+positional arguments:
+  markdown_file      Markdown file with the post content
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --channel CHANNEL  The MatterMost channel to post to (default: APD)
+```
+
 ## Install
 
 Tools Team Bullets is not currently distributed and as such expects users to be
@@ -61,9 +73,10 @@ To install a development version:
 
 ### Initial setup
 
-Bullets includes a `bullets` report generator and a `sendit` report emailer, both
-of which require some setup to authenticate to [GitHub](https://github.com/) and 
-[Amazon Simple Email Service (SES)](https://aws.amazon.com/ses/), respectively.
+Bullets includes a `bullets` report generator, a `sendit` report emailer, and a
+`postit` report MatterMost poster, all of which require some setup to authenticate to
+[GitHub](https://github.com/), [Amazon Simple Email Service (SES)](https://aws.amazon.com/ses/)
+and [ASF's MatterMost](https://chat.asf.alaska.edu), respectively.
 
 #### Bullets report
 
@@ -91,6 +104,22 @@ To use `sendit`, you will need:
    1. allow `ses:SendEmail`
 1. Unless you've taken [Amazon SES out of the sandbox](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/request-production-access.html),
    all "to" **and** "from" emails need to be verified
+
+#### Post to MatterMost
+
+`postit` uses [Mattermostdriver](https://vaelor.github.io/python-mattermost-driver/)
+to post messages to [ASF's MatterMost](https://chat.asf.alaska.edu). You will need a
+[A MatterMost Personal Access Token (PAT)](https://mattermost.com/blog/mattermost-integrations-mattermost-api/)
+to connect to your MatterMost account.
+
+*Note:* you may need to [open a Platform Ticket](https://asfdaac.atlassian.net/secure/CreateIssueDetails!init.jspa?pid=11808&issuetype=10002&priority=10000)
+asking for permission to create a PAT.
+
+Once you have your PAT, you need to set a `MATTERMOST_PAT` environment variable with
+the PAT as its value:
+```
+export MATTERMOST_PAT=XXX
+```
 
 ### Bullets Report
 
@@ -160,11 +189,20 @@ but rendering will likely be #NotGreat.
 
 ### Send report email
 
-Bullets also includes a utility to send the bullets report by email using the 
+Bullets includes a utility to send the bullets report by email using the
 [Amazon Simple Email Service (SES)](https://aws.amazon.com/ses/). You can send a
 previously generated report like:
 
 ```shell
 export EMAIL_SUBJECT=$(sed -n 3p report.md)
 sendit report.md sender@alaska.edu "${EMAIL_SUBJECT}" recepient@alaska.edu
+```
+
+### Post report to MatterMost
+
+Bullets includes a utility to post messages to [ASF's MatterMost](https://chat.asf.alaska.edu).
+You can send a previously generated report like:
+
+```shell
+postit report.md --channel APD
 ```

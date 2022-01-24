@@ -37,7 +37,7 @@ def main():
     )
 
     parser.add_argument('markdown_file', type=Path, help='Markdown file with the post content')
-    parser.add_argument('--channel', default='APD', help='The MatterMost channel to post to')
+    parser.add_argument('--channel', default='tools-team', help='The MatterMost channel to post to')
 
     args = parser.parse_args()
 

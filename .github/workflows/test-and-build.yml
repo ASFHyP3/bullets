@@ -16,23 +16,12 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  pytest:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          mamba-version: "*"
-          python-version: 3.9
-          activate-environment: bullets
-          environment-file: environment.yml
-
-      - name: Pytest in conda environment
-        shell: bash -l {0}
-        run: |
-          python -m pip install ".[develop]"
-          pytest --cov=bullets
+  call-pytest-workflow:
+    uses: ASFHyP3/actions/.github/workflows/reusable-pytest.yml@main
+    with:
+      local_package_name: bullets
+      conda_env_name: bullets
+      python_version: '3.9'
 
   package:
     runs-on: ubuntu-latest
@@ -77,7 +66,7 @@ jobs:
 
       - uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install dependencies
         run: |

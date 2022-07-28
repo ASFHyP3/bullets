@@ -37,7 +37,7 @@ jobs:
           auto-update-conda: true
           python-version: 3.8
           activate-environment: bullets
-          environment-file: conda-env.yml
+          environment-file: environment.yml
 
       - name: Install bullets
         shell: bash -l {0}

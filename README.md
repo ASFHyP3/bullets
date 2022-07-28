@@ -58,7 +58,7 @@ To install a development version:
    ```
 2. create a development environment
    ```shell
-   conda env create -f conda-env.yml
+   conda env create -f environment.yml
    ```
 3. install an editable/develop version of `bullets`
    ```shell

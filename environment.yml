@@ -3,8 +3,18 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python=3.8
+  - python=3.9
   - pip
+  # For running
+  - boto3
+  - ghapi
+  - jinja2
+  - jupyter
+  - mattermostdriver
+  - mistune
+  - premailer
+  - python-dateutil
+  - tqdm
   # For packaging, and testing
   - flake8
   - flake8-import-order
@@ -16,15 +26,3 @@ dependencies:
   - pytest
   - pytest-console-scripts
   - pytest-cov
-  # For running
-  - boto3
-  - jinja2
-  - jupyter
-  - mattermostdriver
-  - mistune
-  - python-dateutil
-  - tqdm
-  - pip:
-    # For running
-    - ghapi
-    - premailer

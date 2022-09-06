@@ -11,7 +11,7 @@ dependencies:
   - jinja2
   - jupyter
   - mattermostdriver
-  - mistune
+  - mistune<2
   - premailer
   - python-dateutil
   - tqdm

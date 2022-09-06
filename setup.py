@@ -34,7 +34,7 @@ setup(
         'ghapi',
         'jinja2',
         'mattermostdriver',
-        'mistune',
+        'mistune<2',
         'premailer',
         'python-dateutil',
         'tqdm',

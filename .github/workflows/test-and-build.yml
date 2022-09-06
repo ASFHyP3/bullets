@@ -25,7 +25,7 @@ jobs:
 
   package:
     runs-on: ubuntu-latest
-    needs: pytest
+    needs: call-pytest-workflow
     outputs:
       SDIST_VERSION:  ${{ steps.build.outputs.version }}
     steps:

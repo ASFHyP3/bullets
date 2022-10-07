@@ -13,6 +13,9 @@ on:
 # needed when testing b/c SES client is created
 env:
   AWS_DEFAULT_REGION: us-west-2
+  AWS_ACCESS_KEY_ID: ${{ secrets.V2_AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.V2_AWS_SECRET_ACCESS_KEY }}
+
 
 jobs:
   call-pytest-workflow:

@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import sys
 from pathlib import Path
 from pprint import pprint
@@ -11,7 +12,7 @@ from premailer import transform
 
 from bullets.util import render_template
 
-SES = boto3.client('ses')
+SES = boto3.client('ses', os.environ.get('AWS_PROFILE', os.environ.get('AWS_DEFAULT_PROFILE', 'us-west-2')))
 
 
 def content(markdown_file: Path) -> Tuple[str, str]:

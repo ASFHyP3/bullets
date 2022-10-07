@@ -10,6 +10,9 @@ on:
       - main
       - develop
 
+# needed when testing b/c SES client is created
+env:
+  AWS_DEFAULT_REGION: us-west-2
 
 jobs:
   call-pytest-workflow:

@@ -12,7 +12,7 @@ from premailer import transform
 
 from bullets.util import render_template
 
-SES = boto3.client('ses', os.environ.get('AWS_PROFILE', os.environ.get('AWS_DEFAULT_PROFILE', 'us-west-2')))
+SES = boto3.client('ses', os.environ.get('AWS_REGION', os.environ.get('AWS_DEFAULT_REGION', 'us-west-2')))
 
 
 def content(markdown_file: Path) -> Tuple[str, str]:

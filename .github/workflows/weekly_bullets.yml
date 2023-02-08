@@ -62,8 +62,7 @@ jobs:
         shell: bash -l {0}
         run: |
           export EMAIL_SUBJECT=$(sed -n 3p report.md)
-          sendit report.md UAF-asf-apd@alaska.edu "${EMAIL_SUBJECT}" kahogenson@alaska.edu
-          postit report.md
+          sendit report.md UAF-asf-apd@alaska.edu "${EMAIL_SUBJECT}" kahogenson@alaska.edu jdmilburn@alaska.edu rrmiller2@alaska.edu jhkennedy@alaska.edu
 
       - name: Send dispatched messages
         if: github.event_name == 'workflow_dispatch'
